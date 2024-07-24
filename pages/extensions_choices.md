@@ -4,16 +4,24 @@ weight: 4
 ---
 
 ## Server extensions
-Zipkin server bundles extension for span collection and storage. By default spans can be collected over http, Kafka or RabbitMQ transports and stored in-memory or in MySQL, Cassandra or Elasticsearch.
 
-The following modules add storage or transport extensions to the default server build.
-Please refer to their individual documentation for setup and configuration guides.
+* Zipkin server -- bundles extension for --
+  * span collection over
+    * http
+    * Kafka
+    * RabbitMQ 
+  * storage
+    * in-memory
+    * MySQL
+    * Cassandra
+    * Elasticsearch
+* modules / to the default server build, add
+  * transport extensions
+  * storage 
 
 ### OpenZipkin supported
 
-The following extensions are supported by the OpenZipkin team and are hosted at
-the [OpenZipkin GitHub](https://github.com/openzipkin/) group. You can reach out to
-the team on [Zipkin Gitter](https://gitter.im/openzipkin/zipkin/) chat.
+* hosted | [OpenZipkin GitHub](https://github.com/openzipkin/)
 
 | Type | Module | Related product | Other notes |
 |:-----|:--------|:----------------|:------------|{% for extension in site.data.extensions %}
@@ -30,28 +38,46 @@ the team on [Zipkin Gitter](https://gitter.im/openzipkin/zipkin/) chat.
 
 ## Alternative servers
 
-The OpenZipkin team publish apis, data formats, and shared libraries that allow alternate backends to process the
-same data sent to the default Zipkin server.
+* alternate backends (to the default Zipkin server) / process the same data sent
+  * via
+    * API
+    * data formats
+    * shared libraries 
 
 ### Community supported
 
-Listed below are alternative backends that accept Zipkin format. Some use the same code as Zipkin on the same endpoints while others are on alternative endpoints or partially support features. In any case, the following aim to allow existing zipkin clients to use backends the OpenZipkin team does not support. Hence, direct questions to their respective communities.
-    
- - [Apache SkyWalking](https://skywalking.apache.org/)
-   - When [zipkin trace component](https://skywalking.apache.org/docs/main/next/en/setup/backend/zipkin-trace/) is enabled, Skywalking exposes the same HTTP POST endpoints and Kafka topic Zipkin does
-     - http port 9411 accepts `/api/v1/spans` (thrift, json) and `/api/v2/spans` (json, proto) POST requests.
-     - Kafka `zipkin` topic, and `zipkin` group ID accepts v2 spans encoded as a thrift/json/proto list per message. 
-     - this extension uses the same encoding library and same endpoints as Zipkin does.
-   - Zipkin Lens UI is also bundled in SkyWalking booster UI since 9.4.0. `/zipkin` is exposed by SkyWalking webapp.
- - [Jaeger](https://github.com/jaegertracing/jaeger)
-   - When `COLLECTOR_ZIPKIN_HTTP_PORT=9411` is set, Jaeger exposes a partial implementation of Zipkin's HTTP POST endpoints
-     - http port 9411 accepts `/api/v1/spans` (thrift, json) and `/api/v2/spans` (json, proto) POST requests.
-   - When `SPAN_STORAGE_TYPE=kafka` and `zipkin-thrift`, Jaeger reads Zipkin v1 thrift encoded span messages from a Kafka topic.
-     - Note: The above is a [deprecated practice](https://github.com/openzipkin/zipkin/tree/master/zipkin-collector/kafka#legacy-encoding) in Zipkin. Most instrumentation bundle multiple spans per message in v2 format.
- - [Pitchfork](https://github.com/HotelsDotCom/pitchfork)
-   - Pitchfork exposes the same HTTP POST endpoints Zipkin does
-     - http port 9411 accepts `/api/v1/spans` (thrift, json) and `/api/v2/spans` (json, proto) POST requests.
-
-Did we miss a server extension or alternative? Please open a pull-request to
-[openzipkin.github.io](https://github.com/openzipkin/openzipkin.github.io).
-
+* alternative backends / accept Zipkin format
+  * how can be splited ?
+    * those / use the same code as Zipkin | same endpoints
+    * those / alternative endpoints OR partially support features
+  * cases
+    * [Apache SkyWalking](https://skywalking.apache.org/)
+      * if [zipkin trace component](https://skywalking.apache.org/docs/main/next/en/setup/backend/zipkin-trace/) is enabled -> Skywalking
+        * exposes
+          * == HTTP POST endpoints to Zipkin
+            * http port 9411 accepts POST requests |
+              * `/api/v1/spans` (thrift, json)
+              * `/api/v2/spans` (json, proto)  
+          * == Kafka topic to Zipkin
+            * kafka topic `zipkin`
+            * groupID `zipkin`
+            * v2 spans -- encoded as a -- thrift/json/proto list / message 
+        * == encoding library 
+    * Zipkin Lens UI
+      * bundled in SkyWalking booster UI since 9.4.0
+      * `/zipkin` -- is exposed by -- SkyWalking webapp
+    * [Jaeger](https://github.com/jaegertracing/jaeger)
+      * if `COLLECTOR_ZIPKIN_HTTP_PORT=9411` is set -> Jaeger exposes a
+        * partial implementation of Zipkin's HTTP POST endpoints
+          * http port 9411 accepts POST requests
+            * `/api/v1/spans` (thrift, json)
+            * `/api/v2/spans` (json, proto) 
+      * if `SPAN_STORAGE_TYPE=kafka` and `zipkin-thrift` -> Jaeger reads
+        * Zipkin v1 thrift encoded span messages | Kafka topic.
+          * Note: The above is a [deprecated practice](https://github.com/openzipkin/zipkin/tree/master/zipkin-collector/kafka#legacy-encoding) in Zipkin. Most instrumentation bundle multiple spans per message in v2 format.
+    * [Pitchfork](https://github.com/HotelsDotCom/pitchfork)
+      * exposes
+        * == HTTP POST endpoints Zipkin
+          * http port 9411 accepts POST requests
+            * `/api/v1/spans` (thrift, json)
+            * `/api/v2/spans` (json, proto) 
