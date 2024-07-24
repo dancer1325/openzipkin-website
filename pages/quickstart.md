@@ -15,7 +15,9 @@ weight: 1
   * provide
     * scripts and
     * pre-built images
-      * [`docker-compose.yml`](https://github.com/openzipkin/docker-zipkin/blob/master/docker-compose.yml)
+      * Docker Compose
+        * [Check an example here](https://github.com/openzipkin/zipkin/blob/master/docker/examples/docker-compose.yml)
+        * `docker compose up`
       * run the latest image directly
 
     ~~~ bash
