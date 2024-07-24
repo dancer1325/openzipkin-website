@@ -25,42 +25,31 @@ weight: 1
     ~~~
 
 ## Java
-* TODO: 
-If you have Java 17 or higher installed, the quickest way to get started is to fetch the [latest release](https://search.maven.org/remote_content?g=io.zipkin&a=zipkin-server&v=LATEST&c=exec) as a self-contained executable jar:
-
-~~~ bash
-curl -sSL https://zipkin.io/quickstart.sh | bash -s
-java -jar zipkin.jar
-~~~
+* requirements
+  * Java v17+
+* `curl -sSL https://zipkin.io/quickstart.sh | bash -s`
+  * fetch the [latest release](https://search.maven.org/remote_content?g=io.zipkin&a=zipkin-server&v=LATEST&c=exec)
+* `java -jar zipkin.jar`
+  * run the executable
 
 ## Homebrew
-
-If you have [Homebrew](https://brew.sh/) installed, the quickest way to get started is to install
-the [zipkin formula](https://formulae.brew.sh/formula/zipkin).
-
-~~~ bash
-brew install zipkin
-# to run in foreground
-zipkin
-# to run in background
-brew services start zipkin
-~~~
+* `brew install zipkin`
+* ways to run
+  * `zipkin`
+    * foreground
+  * `brew services start zipkin`
+    * background
 
 ## Running from Source
 
-Zipkin can be run from source if you are developing new features. To achieve this, you'll need to
-get [Zipkin's source](https://github.com/openzipkin/zipkin) and build it.
-
-~~~ bash
-# get the latest source
-git clone https://github.com/openzipkin/zipkin
-cd zipkin
-# Build the server and also make its dependencies
-./mvnw -T1C -q --batch-mode -DskipTests --also-make -pl zipkin-server clean package
-# Run the server
-java -jar ./zipkin-server/target/zipkin-server-*exec.jar
-# or Run the slim server
-java -jar ./zipkin-server/target/zipkin-server-*slim.jar
-~~~
-
-Stop by and socialize with us on [gitter](https://gitter.im/openzipkin/zipkin), if you end up making something interesting!
+* uses
+  * you are developing new features | zipkin
+* `git clone https://github.com/openzipkin/zipkin`
+* `cd zipkin`
+* `./mvnw -T1C -q --batch-mode -DskipTests --also-make -pl zipkin-server clean package`
+  * Build the server and also make its dependencies
+* available servers to run
+  * `java -jar ./zipkin-server/target/zipkin-server-*exec.jar`
+    * common server
+  * `java -jar ./zipkin-server/target/zipkin-server-*slim.jar`
+    * slim server
