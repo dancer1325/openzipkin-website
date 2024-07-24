@@ -1,16 +1,12 @@
 # openzipkin.github.io
 
-This repository contains the source code for the Zipkin documentation site
-http://zipkin.io. It's the
-[organization page](https://help.github.com/articles/user-organization-and-project-pages/)
-for [`openzipkin`](https://github.com/openzipkin/), hosted using
-[GitHub pages and Jekyll](https://help.github.com/articles/using-jekyll-as-a-static-site-generator-with-github-pages/).
-This means that everything on the `master` branch is immediately and
-automatically published.
-
-It uses the static site generator [Jekyll](http://jekyllrb.com/). Jekyll is
-implemented in [Ruby](https://www.ruby-lang.org/en/) and requires Ruby
-version >= 2.7.
+* source code for the [Zipkin documentation site](http://zipkin.io)
+* [organization page](https://help.github.com/articles/user-organization-and-project-pages/) for [`openzipkin`](https://github.com/openzipkin/), hosted using
+* == [GitHub pages and Jekyll](https://help.github.com/articles/using-jekyll-as-a-static-site-generator-with-github-pages/)
+  * -> everything | `master` branch -- is immediately and automatically -- published
+  * [Jekyll](http://jekyllrb.com/)
+    * == static site generator 
+    * implemented in [Ruby](https://www.ruby-lang.org/en/) / Ruby version >= 2.7
 
 ## Contributing
 
