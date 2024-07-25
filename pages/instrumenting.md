@@ -2,66 +2,90 @@
 title: Instrumenting a library
 ---
 
-This is an advanced topic. Before reading further, you may want to check whether
-an instrumentation library for your platform [already exists]({{ site.github.url
-}}/pages/tracers_instrumentation). If not and if you want to take on creating an instrumentation library, first things first; jump on
-[Zipkin Gitter chat channel](https://gitter.im/openzipkin/zipkin) and let us know. We'll be extremely
-happy to help you along the way.
-{: .message}
+* [Check previously ALREADY existing instrumentation library / platform]({{ site.github.url}}/pages/tracers_instrumentation)
+* [Ask in Zipkin Gitter chat channel](https://gitter.im/openzipkin/zipkin) 
 
 Overview
 =======
 
-To instrument a library, you'll need to understand and create the following elements:
-
-1. Core data structures - the information that is collected and sent to Zipkin
-1. Trace identifiers - what tags for the information are needed so it can be reassembled in a logical order by Zipkin
-  * Generating identifiers - how to generate these IDs and which IDs should be inherited
-  * Communicating trace information - additional information that is sent to Zipkin along with the traces and their IDs.
-1. Timestamps and duration - how to record timing information about an operation.
-
-
-Alright, ready? Here we go.
+* elements / need to be created
+  * Core data structures
+    * information /
+      * collected
+      * sent to Zipkin
+  * Trace identifiers
+    * tags for the information
+      * allows
+        * reassembling the information / logical order | Zipkin
+    * identifiers
+      * generate them
+      * consider which should be inherited
+    * communicating trace information
+      * == additional (to traces and Ids) information / -- sent to -- Zipkin
+  * Timestamps and duration | operation
+    * need to be recorded
 
 Core data structures
 =====
 
-Core data structures are documented in detail in [Thrift](https://github.com/openzipkin/zipkin-api/blob/master/thrift/zipkinCore.thrift) comments. Here's a high-level description to get you started:
+* Check deeply detailed in [Thrift](https://github.com/openzipkin/zipkin-api/blob/master/thrift/zipkinCore.thrift)
+* high-level description
+  * Annotation
+  * BinaryAnnotation
+  * Endpoint
+  * Span
+  * Trace
 
 **Annotation**
 
-An Annotation is used to record an occurrence in time. There's a set of core
-annotations used to define the beginning and end of an RPC request:
+* uses
+  * record an occurrence | time
+* core annotations
+  * uses
+    * define about RPC request
+      * beginning
+      * end
+    * define message brokers
+  * annotation about RPC requests
+    * **cs** or Client Send
+      * Client -- has made the -- request
+        * -> beginning of the span
+    * **sr** or Server Receive
+      * server 
+        * has received the request &
+        * will start processing it
+      * - `cs` (in time)
+        * network latency + clock jitter (?)
+    * **ss** or Server Send
+      * server
+        * has completed processing &
+        * has -- sent the request back to the -- client
+      * vs `sr` (in time)
+        * time / server -- required to process the -- request
+    * **cr** or Client Receive
+      * client -- has received the response from the -- server
+        * -> end of the span
+      * once this annotation is recorded -> RPC is considered complete
+  * annotation about message brokers
+    * **ms** or Message Send
+      * producer -- sends a message to a -- broker
+    * **mr** or Message Receive
+      * consumer -- received a message from a -- broker
+* other (!= core) annotations
+  * can be recorded | request's lifetime
+  * provide
+    * further insight
+  * _Example:_
+    * WHEN a server begins AND ends an expensive computation
+      * -- providing the insight about -- time spent
+* RPC vs messaging
+  * messaging spans ⚠️ NEVER share a span ID ⚠️
+    * _Example:_ child span / consumer of a message != producing span
 
-* **cs** - Client Send. The client has made the request. This sets the
-  beginning of the span.
-* **sr** - Server Receive: The server has received the request and will start
-  processing it. The difference between this and `cs` will be combination of
-  network latency and clock jitter.
-* **ss** - Server Send: The server has completed processing and has sent the
-  request back to the client. The difference between this and `sr` will be the
-  amount of time it took the server to process the request.
-* **cr** - Client Receive: The client has received the response from the server.
-  This sets the end of the span. The RPC is considered complete when this
-  annotation is recorded.
-
-When using message brokers instead of RPCs, the following annotations help
-clarify the direction of the flow:
-
-* **ms** - Message Send: The producer sends a message to a broker.
-* **mr** - Message Receive: A consumer received a message from a broker.
-
-Unlike RPC, messaging spans never share a span ID. For example, each consumer
-of a message is a different child span of the producing span.
-
-Other annotations can be recorded during the request's lifetime in order to
-provide further insight. For instance adding an annotation when a server begins
-and ends an expensive computation may provide insight into how much time is
-being spent pre and post processing the request versus how much time is spent
-running the calculation.
 
 **BinaryAnnotation**
 
+* TODO:
 Binary annotations do not have a time component. They are meant to provide extra
 information about the RPC. For instance when calling an HTTP service, providing
 the URI of the call will help with later analysis of requests coming into the
