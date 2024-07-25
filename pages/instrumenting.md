@@ -93,13 +93,11 @@ service. Binary annotations can also be used for exact match search in the
 Zipkin Api or UI.
 
 **Endpoint**
-Annotations and binary annotations have an endpoint associated with them. With two
-exceptions, this endpoint is associated with the traced process. For example, the
-service name drop-down in the Zipkin UI corresponds with Annotation.endpoint.serviceName
-or BinaryAnnotation.endpoint.serviceName. For the sake of usability, the cardinality
-of Endpoint.serviceName should be bound. For example, it shouldn't include variables
-or random numbers.
 
+* 👁️ Annotations and binary annotations / -- have an associated -- endpoint 👁️
+  * ALL (except 2 -- [Which one](https://github.com/openzipkin/openzipkin.github.io/issues/181) ?) endpoints -- are associated with the -- traced process
+    * _Example:_ service name drop-down | Zipkin UI (TODO:?) -- corresponds with -- `Annotation.endpoint.serviceName` or `BinaryAnnotation.endpoint.serviceName`
+    * *Example:* the cardinality of `Endpoint.serviceName` should be bound (TODO:?)
 
 **Span**
 
