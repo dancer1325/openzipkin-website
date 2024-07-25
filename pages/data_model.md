@@ -2,13 +2,12 @@
 title: Data Model
 ---
 
-*Note* this page is out-of-date. Please view the [Zipkin Api](https://zipkin.io/zipkin-api/#/default/post_spans) doc which elaborates the fields in the model until this page is updated.
-
-In order to illustrate the tracing data that Zipkin displays, let's relate it to the equivalent information in the Zipkin data model. By comparing these, we see that
-
-+ inbound and outbound requests are in different spans
-+ spans that include `cs` can log an `sa` annotation of where they are going
-  + This helps when the destination protocol isn't Zipkin instrumented, such as MySQL.
+* ⚠️ this page is OUT-OF-DATE. Check [Zipkin Api](https://zipkin.io/zipkin-api/#/default/post_spans) ⚠️
+* tracing data / Zipkin displays vs Zipkin data model
+  * inbound and outbound requests are | != spans (?)
+  * spans / include `cs` -- can log an -- `sa` annotation | where they are going (?)
+    * uses
+      * destination protocol is NOT Zipkin instrumented -- _Example:_ MySQL --
 
 First, we see one trace as shown in the Zipkin trace  viewer:
 
