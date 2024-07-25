@@ -6,45 +6,71 @@ weight: 2
 Architecture Overview
 ----------------------
 
-Tracers live in your applications and record timing and metadata about
-operations that took place. They often instrument libraries, so that their use
-is transparent to users. For example, an instrumented web server records when it
-received a request and when it sent a response. The trace data collected is
-called a Span.
-
-Instrumentation is written to be safe in production and have little overhead.
-For this reason, they only propagate IDs in-band, to tell the receiver there’s
-a trace in progress. Completed spans are reported to Zipkin out-of-band,
-similar to how applications report metrics asynchronously.
-
-For example, when an operation is being traced and it needs to make an outgoing
-http request, a few headers are added to propagate IDs. Headers are not used to
-send details such as the operation name.
-
-The component in an instrumented app that sends data to Zipkin is called a
-Reporter. Reporters send trace data via one of several transports to Zipkin
-collectors, which persist trace data to storage. Later, storage is queried by
-the API to provide data to the UI.
-
-Here's a diagram describing this flow:
+* Tracers
+  * live | applications
+  * allows
+    * recording 👁️timing and metadata 👁️ about operations / took place
+  * uses
+    * instrument libraries
+      * -> their use -- is transparent to -- users
+  * _Example:_ instrumented web server / records when it
+    * received a request
+    * sent a response 
+  * [available ones / platform]({{ site.github.url}}/pages/tracers_instrumentation)
+* Span
+  * := trace data collected
+* Instrumentation
+  * design
+    * safe in production
+    * little overhead ->
+      * 👁 for trace in progress️ -- ONLY propagate IDs in-band / tell to the -- receiver 👁️
+        * if you need to make an outgoing HTTP request, -- few headers (NOT the operationName) are added to -- propagate IDs 
+      * completed spans -- are reported 👁️ out-of-band 👁️, to -- Zipkin
+        * == 👁️asynchronously 👁️
+          * Reason: 🧠 prevent delays or failures | user code 🧠
+* Reporter
+  * := component | instrumented app / -- sends data to -- Zipkin
+    * data -- is sent via >= 1 transports, to -- Zipkin Collectors / persist it | storage
+    *  data provided | Zipkin UI -- is retrieved via the Zipkin API, from the -- storage
+* Transport
+  * media / spans sent by the instrumented library -- are transported to -- Zipkin Collectors 
+  * primary transports
+    * HTTP
+    * Kafka
+    * Scribe
+* Zipkin == collector + storage + searchOrQuery + web UI
+  * collector
+    * collector daemon, about the trace data,
+      * validate
+      * store
+      * index
+  * storage
+    * pluggable / 
+      * natively support
+        * Cassandra
+        * ElasticSearch
+        * MySQL
+      * could exist TP extensions 
+    * originally, just to store | Cassandra
+      * Reason: scalable, flexible schema, and heavily used | Twitter
+  * searchOrQuery
+    * searchOrQuery daemon -- provides a -- simple JSON API / find and retrieve traces
+      * primary consumer of this API --  Web UI
+  * web UI
+    * == GUI / nice interface -- for viewing -- traces
+      * traces -- are based on -- service, time, and annotations
+      * NO built-in authentication | UI!
 
 ![Zipkin architecture]({{ site.github.url }}/public/img/architecture-1.png)
 
-To see if a tracer or instrumentation library already exists for your platform, see
-[our list]({{ site.github.url}}/pages/tracers_instrumentation).
+---
 
 Example flow
 -----------------------
 
-As mentioned in the overview, identifiers are sent in-band and details are sent
-out-of-band to Zipkin. In both cases, trace instrumentation is responsible for
-creating valid traces and rendering them properly. For example, a tracer ensures
-parity between the data it sends in-band (downstream) and out-of-band (async to
-Zipkin).
+* http tracing / user code -- calls -- /foo
+  * once, user received a http response -- 1! span is sent asynchronously to -- Zipkin 
 
-Here's an example sequence of http tracing where user code calls the resource
-/foo. This results in a single span, sent asynchronously to Zipkin after user
-code receives the http response.
 
 ```
 ┌─────────────┐ ┌───────────────────────┐  ┌─────────────┐  ┌──────────────────┐
@@ -88,48 +114,3 @@ code receives the http response.
                              │--snip--                        │
                              └────────────────────────────────┘
 ```
-
-Trace instrumentation report spans asynchronously to prevent delays or failures
-relating to the tracing system from delaying or breaking user code.
-
-Transport
----------
-
-Spans sent by the instrumented library must be transported from the services
-being traced to Zipkin collectors. There are three primary transports: HTTP,
-Kafka and Scribe.
-
-Components
-----------
-
-There are 4 components that make up Zipkin:
-
-* collector
-* storage
-* search
-* web UI
-
-### Zipkin Collector
-
-Once the trace data arrives at the Zipkin collector daemon, it is validated,
-stored, and indexed for lookups by the Zipkin collector.
-
-### Storage
-
-Zipkin was initially built to store data on Cassandra since Cassandra is
-scalable, has a flexible schema, and is heavily used within Twitter. However, we
-made this component pluggable. In addition to Cassandra, we natively support
-ElasticSearch and MySQL. Other back-ends might be offered as third party
-extensions.
-
-### Zipkin Query Service
-
-Once the data is stored and indexed, we need a way to extract it. The query
-daemon provides a simple JSON API for finding and retrieving traces. The primary
-consumer of this API is the Web UI.
-
-### Web UI
-
-We created a GUI that presents a nice interface for viewing traces. The web UI
-provides a method for viewing traces based on service, time, and annotations.
-Note: there is no built-in authentication in the UI!
