@@ -101,16 +101,16 @@ Zipkin Api or UI.
 
 **Span**
 
-A set of Annotations and BinaryAnnotations that correspond to a particular RPC.
-Spans contain identifying information such as traceId, spanId, parentId, and
-RPC name.
-
-Spans are usually small. For example, the serialized form is often measured in
-KiB or less. When spans grow beyond orders of KiB, other problems occur, such as
-hitting limits like Kafka message size (1MiB). Even if you can raise message
-limits, large spans will increase the cost and decrease the usability of the
-tracing system. For this reason, be conscious to store data that helps explain
-system behavior, and don't store data that doesn't.
+* := set of Annotations and BinaryAnnotations / -- correspond to a -- particular RPC
+  * contain information -- _Example:_ traceId, spanId, parentId, and RPC name
+  * usually small
+    * _Example:_ the serialized form <= KiB
+    * if spans grow beyond orders of KiB -> other problems occur
+      * *Examples:*
+        * _Example1:_ hitting limits like Kafka message size (1MiB)
+        * _Example2:_ increase the cost
+        * *Example3:* decrease the usability of the tracing system
+      * 🧠 recommendation: 🧠 store data / helps explain system behavior
 
 **Trace**
 
